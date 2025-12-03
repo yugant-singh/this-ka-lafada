@@ -1,0 +1,395 @@
+The this keyword ---->>>
+1️⃣ this ka basic rule
+
+ . this refers to the object that is executing the current function.
+ . Matlab this hamesha context ke hisaab se change hota hai.
+ ------------------------------------------------------------------------------------------------
+ 2️⃣ Global context
+console.log(this);
+
+Browser mein → window object.
+Node.js mein → {} (empty object).
+-------------------------------------------------------------------------------------------------
+3️⃣ Function ke andar
+function normalFunc() {
+    console.log(this);
+}
+normalFunc();
+Strict mode mein → undefined
+Non-strict mode mein → window (browser)
+-------------------------------------------------------------------------------------------------
+4️⃣ Object method ke andar
+const obj = {
+    name: "Ali",
+    greet: function() {
+        console.log(this.name);
+    }
+};
+obj.greet(); // Ali
+this refers to the object (obj) that called the method.
+-------------------------------------------------------------------------------------------------
+5️⃣ Arrow functions
+
+Arrow functions ka this lexical hota hai → yani parent scope se lega
+
+const obj = {
+    name: "Ali",
+    greet: () => {
+        console.log(this.name);
+    }
+};
+obj.greet(); // undefined (because `this` points to global/window)
+
+=================================================================================================
+
+📌 Function Methods in JavaScript: call, apply, bind --->
+-------------------------------------------------------------------------------------------------
+1. call()
+🔹 Definition:
+
+call() ==> ek function method hai jo aapko allow karta hai ki aap function ke andar this ko manually set karo.
+
+ 
+ * Function turant execute hota hai.
+ * Arguments comma separated pass hote hain.
+
+🔹 Example:
+function greet(city, country) {
+  console.log(`Hello, I am ${this.name} from ${city}, ${country}`);
+}
+
+const person1 = { name: "Ali" };
+const person2 = { name: "Sara" };
+
+// Using call()
+greet.call(person1, "Lahore", "Pakistan");
+// Output: Hello, I am Ali from Lahore, Pakistan
+
+greet.call(person2, "Delhi", "India");
+// Output: Hello, I am Sara from Delhi, India
+
+-------------------------------------------------------------------------------------------------
+2. apply()
+🔹 Definition:
+
+* apply() ka kaam call() jaisa hi hota hai, difference sirf arguments dene ka hai.
+* Isme arguments array ([]) ke form mein pass hote hain.
+* Function turant execute hota hai.
+
+🔹 Example:
+greet.apply(person1, ["Karachi", "Pakistan"]);
+// Output: Hello, I am Ali from Karachi, Pakistan
+
+greet.apply(person2, ["Mumbai", "India"]);
+// Output: Hello, I am Sara from Mumbai, India
+
+
+👉 Use case: Jab arguments already ek array ke form mein available ho.
+
+const details = ["New York", "USA"];
+greet.apply(person2, details);
+// Output: Hello, I am Sara from New York, USA
+-------------------------------------------------------------------------------------------------
+3. bind()
+🔹 Definition:
+* bind() ek naya function return karta hai jisme this permanently set hota hai.
+* Function turant execute nahi hota, aapko manually call karna padta hai.
+* Arguments comma separated pass hote hain (same as call).
+
+🔹 Example:
+const boundGreet = greet.bind(person1, "Islamabad", "Pakistan");
+
+// function abhi execute nahi hua
+boundGreet(); 
+// Output: Hello, I am Ali from Islamabad, Pakistan
+
+👉 Use case: Jab aapko ek function future mein use karna ho jisme this fix ho.
+
+=================================================================================================
+📘 JavaScript this, call, apply, bind – Practice
+-------------------------------------------------------------------------------------------------
+Q2.
+function test() {
+  console.log(this); // window object
+}
+test();
+
+-------------------------------------------------------------------------------------------------
+Q3.
+const user = {
+  name: "Ali",
+  showName: function () {
+    console.log(this.name);
+  },
+};
+user.showName();
+👉 Output kya aayega aur kyu?
+-------------------------------------------------------------------------------------------------
+Q4.
+const user = {
+  name: "Sara",
+  show: () => {
+    console.log(this.name);
+  },
+};
+user.show();
+👉 Arrow function me this kaise behave karta hai?
+-------------------------------------------------------------------------------------------------
+Q5.
+const obj1 = {
+  name: "Zara",
+  inner: {
+    name: "Bilal",
+    show: function () {
+      console.log(this.name);
+    },
+  },
+};
+obj1.inner.show();
+
+
+👉 this yahan kisko refer karega?
+Ans --Bilal
+=================================================================================================
+🔹 Level 2: call() Method
+
+Focus → function borrowing aur this ko manually set karna.
+
+Q1.
+function greet() {
+  console.log("Hello, " + this.name);
+}
+const person = { name: "Ali" };
+greet.call(person);
+
+Ans --> Hello Ali
+-------------------------------------------------------------------------------------------------
+Q2.
+function intro(city) {
+  console.log(`${this.name} lives in ${city}`);
+}
+const person = { name: "Sara" };
+intro.call(person, "Lahore");
+Ans - Sara lives in Lahore
+-------------------------------------------------------------------------------------------------
+Q3.
+const obj1 = { name: "Zara" };
+const obj2 = { name: "Ahmed" };
+
+function showName() {
+  console.log(this.name);
+}
+
+showName.call(obj1);
+showName.call(obj2);
+
+
+Ans --> Zara , Ahmad
+
+-------------------------------------------------------------------------------------------------
+Q4.
+function add(a, b) {
+  console.log(`${this.prefix} ${a + b}`);
+}
+const mathObj = { prefix: "Sum is:" };
+add.call(mathObj, 5, 10);
+Ans --> Sum is 15
+-------------------------------------------------------------------------------------------------
+Q5.
+const person = { name: "Bilal" };
+function sayHi(lang1, lang2) {
+  console.log(`${this.name} speaks ${lang1} and ${lang2}`);
+}
+sayHi.call(person, "Urdu", "English");
+Ans --> Bilal speaks Urdu and English
+=================================================================================================
+🔹 Level 3: apply() Method
+
+Focus → difference from call() (arguments in array).
+
+Q1.
+function greet(city, country) {
+  console.log(`${this.name} from ${city}, ${country}`);
+}
+const user = { name: "Ali" };
+greet.apply(user, ["Karachi", "Pakistan"]);
+
+Ans --> Ali From Karachi ,Pakistan
+-------------------------------------------------------------------------------------------------
+Q2.
+function add(a, b, c) {
+  console.log(this.prefix, a + b + c);
+}
+const obj = { prefix: "Total:" };
+add.apply(obj, [2, 4, 6]);
+Ans --> Total is 12
+-------------------------------------------------------------------------------------------------
+Q4.
+const numbers = [10, 20, 30, 40];
+console.log(Math.max.apply(null, numbers));
+
+
+👉 Yahan this null kyu diya gaya hai?
+Ans -->
+ka matlab hai →
+Math.max ko call karo
+this ka koi kaam nahi (isliye null)
+numbers array ke elements ko as arguments pass karo
+Yani ye internally convert ho jaata hai:
+=================================================================================================
+🔹 Level 4: bind() Method
+-------------------------------------------------------------------------------------------------
+Q1.
+function greet() {
+  console.log("Hi, " + this.name);
+}
+const person = { name: "Ali" };
+const boundGreet = greet.bind(person);
+
+boundGreet();
+Ans --> 
+Hi, Ali
+-------------------------------------------------------------------------------------------------
+Q2.
+function intro(city) {
+  console.log(`${this.name} lives in ${city}`);
+}
+const user = { name: "Sara" };
+const boundIntro = intro.bind(user, "Karachi");
+
+boundIntro();
+Ans-->
+Sara Lives in Karachi
+-------------------------------------------------------------------------------------------------
+Q3.
+const obj = { name: "Bilal" };
+function sayHi() {
+  console.log("Hello " + this.name);
+}
+
+const bound = sayHi.bind(obj);
+setTimeout(bound, 1000);
+Ans --> !second baad Print hoga ==> Hello Bilal
+-------------------------------------------------------------------------------------------------
+Q4.
+const button = {
+  text: "Click Me",
+  click: function () {
+    console.log(this.text);
+  },
+};
+
+const fakeButton = { text: "Fake" };
+const boundClick = button.click.bind(fakeButton);
+
+boundClick();
+Ans --> Fake
+* Note
+
+But ek case aur ho skta hai ki agar button object ke andar arrow function hota normal function nhi hota to hum this ki value bind se manage nhi kr skte aur uss time this ki value lexical mode se hota aur window object hoti .
+------------------------------------------------------------------------------------------------
+Q5.
+const person = { name: "Ahmed" };
+function sayHi(greeting) {
+  console.log(`${greeting}, ${this.name}`);
+}
+
+const boundHi = sayHi.bind(person);
+boundHi("Hello");
+Ans -->
+Hello,Ahmed
+=================================================================================================
+🔹 Level 5: Mixed Challenge
+Focus →** combine this, call, apply, bind.**
+
+Q1.
+Ek function banao jo firstName aur lastName print kare using this.
+Use call with 2 objects.
+
+Ans -->
+
+function intro(city,country) {
+    console.log(`My name is ${this.firstName} ${this.lastName} , I live in ${city} ,${country}`);
+}
+let obj1 = {
+    firstName: "Ritesh",
+    lastName: "Dubey"
+}
+let obj2 = {
+    firstName: "Yugant",
+    lastName: "Singh"
+}
+intro.call(obj1,"Bhadohi" ,"India");
+intro.call(obj2 ,"Nagpur","Mumbai");
+-------------------------------------------------------------------------------------------------
+Q4.
+
+Ek math object banao jisme ek add function ho. Dusre object ke liye us function ko borrow karo using call.
+
+Ans -->
+
+let math = {
+    a: 16,
+    b: 34,
+    add: function () {
+        console.log(`${this.prefix} a and b is ${this.a + this.b}`)
+    }
+}
+let sub = {
+    a: 20,
+    b: 25,
+    prefix: "Sum of"
+}
+math.add.call(sub)
+-------------------------------------------------------------------------------------------------
+📌 Q5
+const button = {
+  text: "Submit",
+  click: function () {
+    console.log(this.text + " clicked");
+  },
+};
+
+setTimeout(button.click, 1000);       // ❓ yahan output kya hoga?
+setTimeout(button.click.bind(button), 2000); // ❓ aur yahan kya hoga?
+-------------------------------------------------------------------------------------------------
+
+
+📖 Ab iska detail explanation:
+1️⃣ setTimeout(button.click, 1000);
+
+Tumne button.click ko reference ke form me pass kar diya setTimeout ko.
+
+Jab 1 second baad ye function execute hota hai, tab wo independent function ban jata hai (uska this context chala jata hai).
+
+Default case me this = window (browser) / global (Node.js).
+
+window ya global object ke andar koi text property nahi hai → isiliye output:
+
+undefined clicked
+
+2️⃣ setTimeout(button.click.bind(button), 2000);
+
+Yahan tumne bind(button) use kiya.
+bind() ek naya function return karta hai jisme this permanently button object pe set hota hai.
+Ab jab 2 second baad function run hota hai, this.text = "Submit" use hota hai.
+Output:
+
+Submit clicked
+
+✅ Takeaway
+
+Jab tum function ko directly reference ke form me pass karte ho (e.g. setTimeout ya event handler me), tab this ka context lost ho jata hai.
+
+bind() ka use karke tum this ko fix kar sakte ho.
+=================================================================================================
+📌 Mini Project Ideas (based on this, call, apply, bind)
+=================================================================================================
+1. Calculator Object Borrowing
+
+Ek calculator object banao jisme add, sub, mul, div functions ho.
+Dusra object banao jisme numbers ho, aur un methods ko borrow karo call, apply, aur bind ke saath.
+👉 Practice: function borrowing + this ka proper use.
+
+-------------------------------------------------------------------------------------------------
+Solution ===>
