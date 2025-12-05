@@ -1,0 +1,9 @@
+
+# SECTION 5: call, apply, bind
+	13.	Create a function that prints this.name.
+	14.	Create an object that contains a name property.
+
+Use call to run the function using the object
+Use apply to run the function using the object
+Use bind to create a new function and then call it
+	15.	Borrow a method from one object and run it for another object using call.

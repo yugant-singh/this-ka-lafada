@@ -71,3 +71,16 @@
 // }
 // intro.call(person);
 
+//--------------------------------------------------
+//  SECTION 5: call, apply, bind
+// 	13.	Create a function that prints this.name.
+// 	14.	Create an object that contains a name property.
+// function prints(){
+//     console.log(this.name);
+// }
+// let obj  = {
+//     name:"yugant singh"
+// }
+// prints.call(obj);
+
+//--------------------------------------------------
